@@ -1,3 +1,6 @@
+using UrlShortener.Infrastructure;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -14,15 +17,22 @@ try
             .Enrich.FromLogContext()
             .WriteTo.Console());
 
+    SqlConnectionStringBuilder sqlConnectionStringBuilder =
+        new(builder.Configuration.GetConnectionString("UrlShortenerContext"))
+        {
+            Password = builder.Configuration["UrlShortenerContext:Password"]
+        };
+
+    builder.Services.AddDbContext<UrlShortenerContext>(opts =>
+            opts.UseSqlServer(sqlConnectionStringBuilder.ConnectionString));
+
     builder.Services.AddRazorPages();
 
     var app = builder.Build();
 
-    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 
