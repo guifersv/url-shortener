@@ -1,4 +1,6 @@
 
+using Microsoft.EntityFrameworkCore;
+
 using UrlShortener.Domain;
 using UrlShortener.Services.Interfaces;
 
@@ -15,18 +17,21 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
         return createdModel.Entity;
     }
 
-    Task IUrlShortenerRepository.DeleteShortUrlModel(string alias)
+    public async Task DeleteShortUrlModel(ShortUrlModel shortUrlModel)
     {
-        throw new NotImplementedException();
+        _context.Remove(shortUrlModel);
+        await _context.SaveChangesAsync();
     }
 
-    Task IUrlShortenerRepository.FindShortUrlModelByAlias(string alias)
+    public async Task<ShortUrlModel?> FindShortUrlModelByAlias(string alias)
     {
-        throw new NotImplementedException();
+        return await _context.ShortUrls.FirstOrDefaultAsync(m => m.Alias == alias);
     }
 
-    Task IUrlShortenerRepository.IncrementShortUrlAccessCount(string alias)
+    public async Task IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)
     {
-        throw new NotImplementedException();
+        shortUrlModel.Accesses += 1;
+        _context.ShortUrls.Update(shortUrlModel);
+        await _context.SaveChangesAsync();
     }
 }
