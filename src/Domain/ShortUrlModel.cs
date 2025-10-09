@@ -6,7 +6,7 @@ public class ShortUrlModel
 {
     public required string Url { get; init; }
     [MaxLength(30), Key]
-    public required string Alias { get; set; }
+    public required string Alias { get; init; }
     public int Accesses { get; set; }
     public DateTime DateCreated { get; init; }
 }
