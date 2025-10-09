@@ -1,8 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
+using Microsoft.EntityFrameworkCore;
+
 namespace UrlShortener.Domain;
 
-public class ShortUrl
+[Index(nameof(Alias), IsUnique = true)]
+public class ShortUrlModel
 {
     public int Id { get; set; }
     [Url]
