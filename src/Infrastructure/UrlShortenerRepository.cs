@@ -25,7 +25,7 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
 
     public async Task<ShortUrlModel?> FindShortUrlModelByAlias(string alias)
     {
-        return await _context.ShortUrls.FirstOrDefaultAsync(m => m.Alias == alias);
+        return await _context.ShortUrls.FindAsync(alias);
     }
 
     public async Task IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)

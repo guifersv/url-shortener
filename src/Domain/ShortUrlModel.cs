@@ -1,15 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
-using Microsoft.EntityFrameworkCore;
-
 namespace UrlShortener.Domain;
 
-[Index(nameof(Alias), IsUnique = true)]
 public class ShortUrlModel
 {
-    public int Id { get; set; }
     public required string Url { get; init; }
-    [MaxLength(30), MinLength(5)]
+    [MaxLength(30), Key]
     public required string Alias { get; init; }
     public int Accesses { get; set; }
     public DateTime DateCreated { get; init; }
