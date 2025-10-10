@@ -44,4 +44,16 @@ public class UrlShortenerService(IUrlShortenerRepository repository, ILogger<Url
         else
             _logger.LogWarning("UrlShortenerService: The Model doesn't exist in the database.");
     }
+
+    public async Task<IEnumerable<ShortUrlDto>> GetAllShortUrls()
+    {
+        _logger.LogDebug("UrlShortenerService: Retrieving ShortUrl models from the database");
+        return (await _repository.GetAllShortUrls()).Select(m => new ShortUrlDto()
+        {
+            Url = m.Url,
+            Alias = m.Alias,
+            Accesses = m.Accesses,
+            DateCreated = m.DateCreated
+        }).ToList();
+    }
 }

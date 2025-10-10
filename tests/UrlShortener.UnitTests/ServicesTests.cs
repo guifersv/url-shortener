@@ -17,12 +17,12 @@ public class ServicesTests
             .Verifiable(Times.Once());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
-        var resultedObject = await service.FindShortUrlModelByAlias(shortUrlModel.Alias);
+        var returnedObject = await service.FindShortUrlModelByAlias(shortUrlModel.Alias);
 
-        Assert.NotNull(resultedObject);
-        Assert.IsType<ShortUrlDto>(resultedObject);
-        Assert.Equal(shortUrlModel.Alias, resultedObject.Alias);
-        Assert.Equal(shortUrlModel.Url, resultedObject.Url);
+        Assert.NotNull(returnedObject);
+        Assert.IsType<ShortUrlDto>(returnedObject);
+        Assert.Equal(shortUrlModel.Alias, returnedObject.Alias);
+        Assert.Equal(shortUrlModel.Url, returnedObject.Url);
         repositoryMock.Verify();
     }
 
@@ -38,9 +38,9 @@ public class ServicesTests
             .Verifiable(Times.Once());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
-        var resultedObject = await service.FindShortUrlModelByAlias("string");
+        var returnedObject = await service.FindShortUrlModelByAlias("string");
 
-        Assert.Null(resultedObject);
+        Assert.Null(returnedObject);
         repositoryMock.Verify();
     }
 
@@ -134,6 +134,51 @@ public class ServicesTests
         UrlShortenerService service = new(repositoryMock.Object, logger);
         await service.IncrementShortUrlAccessCount("string");
 
+        repositoryMock.Verify();
+    }
+
+    [Fact]
+    public async Task GetAllShortUrls_ShouldReturnList_WhenAtLeastOneExist()
+    {
+        ShortUrlModel shortUrlModel = new() { Alias = "alias", Url = "string" };
+        List<ShortUrlModel> models = [shortUrlModel];
+
+        var logger = Mock.Of<ILogger<UrlShortenerService>>();
+
+        var repositoryMock = new Mock<IUrlShortenerRepository>();
+        repositoryMock
+            .Setup(r => r.GetAllShortUrls().Result)
+            .Returns(models)
+            .Verifiable(Times.Once());
+
+        UrlShortenerService service = new(repositoryMock.Object, logger);
+        var returnedObject = await service.GetAllShortUrls();
+
+        Assert.Single(returnedObject);
+        Assert.IsType<List<ShortUrlDto>>(returnedObject);
+        Assert.Equal(shortUrlModel.Alias, returnedObject.ElementAt(0).Alias);
+        Assert.Equal(shortUrlModel.Url, returnedObject.ElementAt(0).Url);
+        repositoryMock.Verify();
+    }
+
+    [Fact]
+    public async Task GetAllShortUrls_ShouldReturnEmptyList_WhenDoesNotHaveAny()
+    {
+        List<ShortUrlModel> models = [];
+
+        var logger = Mock.Of<ILogger<UrlShortenerService>>();
+
+        var repositoryMock = new Mock<IUrlShortenerRepository>();
+        repositoryMock
+            .Setup(r => r.GetAllShortUrls().Result)
+            .Returns(models)
+            .Verifiable(Times.Once());
+
+        UrlShortenerService service = new(repositoryMock.Object, logger);
+        var returnedObject = await service.GetAllShortUrls();
+
+        Assert.Empty(returnedObject);
+        Assert.IsType<List<ShortUrlDto>>(returnedObject);
         repositoryMock.Verify();
     }
 }

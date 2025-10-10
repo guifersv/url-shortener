@@ -43,4 +43,9 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
         _context.ShortUrls.Update(shortUrlModel);
         await _context.SaveChangesAsync();
     }
+
+    public async Task<IEnumerable<ShortUrlModel>> GetAllShortUrls()
+    {
+        return await _context.ShortUrls.AsNoTracking().ToListAsync();
+    }
 }

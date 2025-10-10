@@ -8,4 +8,5 @@ public interface IUrlShortenerRepository
     public Task<ShortUrlModel?> FindShortUrlModelByAlias(string alias);
     public Task DeleteShortUrlModel(ShortUrlModel shortUrlModel);
     public Task IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel);
+    public Task<IEnumerable<ShortUrlModel>> GetAllShortUrls();
 }
