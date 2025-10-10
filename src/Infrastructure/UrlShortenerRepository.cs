@@ -1,25 +1,31 @@
-
 using Microsoft.EntityFrameworkCore;
-
-using Sqids;
 
 using UrlShortener.Domain;
 using UrlShortener.Services.Interfaces;
+using UrlShortener.Utilities;
 
 namespace UrlShortener.Infrastructure;
 
 public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortenerRepository
 {
     private readonly UrlShortenerContext _context = context;
-    public SqidsEncoder<int> Encoder = new(new() { MinLength = 5 });
 
     public async Task<ShortUrlModel> CreateShortUrlModel(ShortUrlModel shortUrlModel)
     {
-
         var createdModel = await _context.ShortUrls.AddAsync(shortUrlModel);
 
         if (string.IsNullOrEmpty(createdModel.Entity.Alias))
-            createdModel.Entity.Alias = Encoder.Encode(createdModel.Entity.Id);
+        {
+            while (true)
+            {
+                var alias = Utils.CreateAlias();
+                if (_context.ShortUrls.FirstOrDefaultAsync(m => m.Alias == alias) is null)
+                {
+                    createdModel.Entity.Alias = Utils.CreateAlias();
+                    break;
+                }
+            }
+        }
 
         await _context.SaveChangesAsync();
 

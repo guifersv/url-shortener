@@ -15,4 +15,20 @@ public static class Utils
         };
         return shortUrlDto;
     }
+
+    public static string CreateAlias()
+    {
+        Random random = new();
+        var allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        var aliasRange = random.Next(5, 8);
+        char[] chars = new char[aliasRange];
+
+        for (int i = 0; i <= aliasRange; i++)
+        {
+            var currentChar = allowedChars[random.Next(0, allowedChars.Length)];
+            chars[i] = currentChar;
+        }
+        return new string(chars);
+    }
 }
