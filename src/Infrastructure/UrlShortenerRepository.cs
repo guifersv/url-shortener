@@ -18,7 +18,7 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
 
         var createdModel = await _context.ShortUrls.AddAsync(shortUrlModel);
 
-        if (createdModel.Entity.Alias is null)
+        if (string.IsNullOrEmpty(createdModel.Entity.Alias))
             createdModel.Entity.Alias = Encoder.Encode(createdModel.Entity.Id);
 
         await _context.SaveChangesAsync();

@@ -181,4 +181,27 @@ public class ServicesTests
         Assert.IsType<List<ShortUrlDto>>(returnedObject);
         repositoryMock.Verify();
     }
+
+    [Fact]
+    public async Task CreateShortUrlModel_ShouldReturnCreatedModelDto()
+    {
+        ShortUrlModel shortUrlModel = new() { Alias = "alias", Url = "string" };
+
+        var logger = Mock.Of<ILogger<UrlShortenerService>>();
+
+        var repositoryMock = new Mock<IUrlShortenerRepository>();
+        repositoryMock
+            .Setup(r => r.CreateShortUrlModel(It.IsAny<ShortUrlModel>()).Result)
+            .Returns(shortUrlModel)
+            .Verifiable(Times.Once());
+
+        UrlShortenerService service = new(repositoryMock.Object, logger);
+        var returnedObject = await service.CreateShortUrlModel(
+                Utils.ShortUrlModelToDto(shortUrlModel));
+
+        Assert.IsType<ShortUrlDto>(returnedObject);
+        Assert.Equal(shortUrlModel.Alias, returnedObject.Alias);
+        Assert.Equal(shortUrlModel.Url, returnedObject.Url);
+        repositoryMock.Verify();
+    }
 }

@@ -4,7 +4,7 @@ namespace UrlShortener.Utilities;
 
 public static class Utils
 {
-    public static ShortUrlDto ShortUrlModelToDTO(ShortUrlModel shortUrlModel)
+    public static ShortUrlDto ShortUrlModelToDto(ShortUrlModel shortUrlModel)
     {
         ShortUrlDto shortUrlDto = new()
         {
