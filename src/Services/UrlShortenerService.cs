@@ -21,6 +21,21 @@ public class UrlShortenerService(IUrlShortenerRepository repository, ILogger<Url
             _logger.LogWarning("UrlShortenerService: The Model doesn't exist in the database.");
             return null;
         }
+    }
+    public async Task<ShortUrlDto?> DeleteShortUrlModel(string alias)
+    {
+        _logger.LogDebug("UrlShortenerService: Deleting ShortUrlModel by alias: {alias}.", alias);
+        var shortUrlModel = await _repository.FindShortUrlModelByAlias(alias);
 
+        if (shortUrlModel is not null)
+        {
+            await _repository.DeleteShortUrlModel(shortUrlModel);
+            return Utils.ShortUrlModelToDTO(shortUrlModel);
+        }
+        else
+        {
+            _logger.LogWarning("UrlShortenerService: The Model doesn't exist in the database.");
+            return null;
+        }
     }
 }
