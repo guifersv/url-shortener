@@ -64,12 +64,8 @@ public class ServicesTests
             .Verifiable(Times.Once());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
-        var resultedObject = await service.DeleteShortUrlModel(shortUrlModel.Alias);
+        await service.DeleteShortUrlModel(shortUrlModel.Alias);
 
-        Assert.NotNull(resultedObject);
-        Assert.IsType<ShortUrlDto>(resultedObject);
-        Assert.Equal(shortUrlModel.Alias, resultedObject.Alias);
-        Assert.Equal(shortUrlModel.Url, resultedObject.Url);
         repositoryMock.Verify();
     }
 
@@ -90,9 +86,8 @@ public class ServicesTests
             .Verifiable(Times.Never());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
-        var resultedObject = await service.DeleteShortUrlModel("string");
+        await service.DeleteShortUrlModel("string");
 
-        Assert.Null(resultedObject);
         repositoryMock.Verify();
     }
 }
