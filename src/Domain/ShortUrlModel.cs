@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 
 namespace UrlShortener.Domain;
@@ -21,6 +22,7 @@ public record ShortUrlDto
     public required string Url { get; set; }
     [StringLength(30, MinimumLength = 5, ErrorMessage = "The alias must be greater than 5 and less than 30 characters.")]
     public string? Alias { get; set; }
+    [BindNever]
     public int Accesses { get; set; }
     public DateTime DateCreated { get; set; }
 }

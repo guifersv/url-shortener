@@ -1,6 +1,7 @@
 using UrlShortener.Services.Interfaces;
 using UrlShortener.Domain;
 using UrlShortener.Utilities;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace UrlShortener.Services;
 
@@ -15,7 +16,10 @@ public class UrlShortenerService(IUrlShortenerRepository repository, ILogger<Url
         var shortUrlModel = await _repository.FindShortUrlModelByAlias(alias);
 
         if (shortUrlModel is not null)
-            return Utils.ShortUrlModelToDto(shortUrlModel);
+        {
+            var model = await _repository.IncrementShortUrlAccessCount(shortUrlModel);
+            return Utils.ShortUrlModelToDto(model);
+        }
         else
         {
             _logger.LogWarning("UrlShortenerService: The Model doesn't exist in the database.");

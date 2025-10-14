@@ -1,4 +1,7 @@
 using UrlShortener.Infrastructure;
+using UrlShortener.Services.Interfaces;
+using UrlShortener.Services;
+
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -25,6 +28,9 @@ try
 
     builder.Services.AddDbContext<UrlShortenerContext>(opts =>
             opts.UseSqlServer(sqlConnectionStringBuilder.ConnectionString));
+
+    builder.Services.AddScoped<IUrlShortenerRepository, UrlShortenerRepository>();
+    builder.Services.AddScoped<IUrlShortenerService, UrlShortenerService>();
 
     builder.Services.AddRazorPages();
 

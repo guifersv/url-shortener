@@ -43,11 +43,12 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
         return await _context.ShortUrls.FirstOrDefaultAsync(m => m.Alias == alias);
     }
 
-    public async Task IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)
+    public async Task<ShortUrlModel> IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)
     {
         shortUrlModel.Accesses += 1;
-        _context.ShortUrls.Update(shortUrlModel);
+        var model = _context.ShortUrls.Update(shortUrlModel);
         await _context.SaveChangesAsync();
+        return model.Entity;
     }
 
     public async Task<IEnumerable<ShortUrlModel>> GetAllShortUrls()
