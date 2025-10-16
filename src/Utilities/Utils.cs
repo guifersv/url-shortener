@@ -11,7 +11,6 @@ public static class Utils
             Url = shortUrlModel.Url,
             Alias = shortUrlModel.Alias,
             Accesses = shortUrlModel.Accesses,
-            DateCreated = shortUrlModel.DateCreated,
         };
         return shortUrlDto;
     }
@@ -24,9 +23,9 @@ public static class Utils
         var aliasRange = random.Next(5, 8);
         char[] chars = new char[aliasRange];
 
-        for (int i = 0; i <= aliasRange; i++)
+        for (int i = 0; i < aliasRange; i++)
         {
-            var currentChar = allowedChars[random.Next(0, allowedChars.Length)];
+            var currentChar = allowedChars[random.Next(0, allowedChars.Length - 1)];
             chars[i] = currentChar;
         }
         return new string(chars);

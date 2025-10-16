@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-
 using UrlShortener.Domain;
 using UrlShortener.Services.Interfaces;
-using UrlShortener.Utilities;
 
 namespace UrlShortener.Infrastructure;
 
@@ -13,22 +11,7 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
     public async Task<ShortUrlModel> CreateShortUrlModel(ShortUrlModel shortUrlModel)
     {
         var createdModel = await _context.ShortUrls.AddAsync(shortUrlModel);
-
-        if (string.IsNullOrEmpty(createdModel.Entity.Alias))
-        {
-            while (true)
-            {
-                var alias = Utils.CreateAlias();
-                if (_context.ShortUrls.FirstOrDefaultAsync(m => m.Alias == alias) is null)
-                {
-                    createdModel.Entity.Alias = Utils.CreateAlias();
-                    break;
-                }
-            }
-        }
-
         await _context.SaveChangesAsync();
-
         return createdModel.Entity;
     }
 
