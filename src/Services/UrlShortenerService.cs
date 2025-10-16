@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using UrlShortener.Domain;
 using UrlShortener.Services.Interfaces;
 using UrlShortener.Utilities;
