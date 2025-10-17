@@ -53,7 +53,7 @@ public class UrlShortenerService(
 
     public async Task<IEnumerable<ShortUrlDto>> GetAllShortUrls()
     {
-        _logger.LogDebug("UrlShortenerService: Retrieving ShortUrl models from the database");
+        _logger.LogDebug("UrlShortenerService: Retrieving ShortUrl models from the database.");
         return (await _repository.GetAllShortUrls())
             .Select(m => new ShortUrlDto()
             {
@@ -66,7 +66,7 @@ public class UrlShortenerService(
 
     public async Task<ShortUrlDto> CreateShortUrlModel(ShortUrlDto shortUrlDto)
     {
-        _logger.LogDebug("UrlShortenerService: Creating ShortUrl");
+        _logger.LogDebug("UrlShortenerService: Creating ShortUrl.");
         if (string.IsNullOrEmpty(shortUrlDto.Alias))
         {
             while (true)
@@ -74,7 +74,7 @@ public class UrlShortenerService(
                 var alias = Utils.CreateAlias();
                 if (await _repository.FindShortUrlModelByAlias(alias) is null)
                 {
-                    _logger.LogDebug("UrlShortenerService: Generating random ShortUrl alias");
+                    _logger.LogDebug("UrlShortenerService: Generating random ShortUrl alias.");
                     shortUrlDto.Alias = alias;
                     break;
                 }
