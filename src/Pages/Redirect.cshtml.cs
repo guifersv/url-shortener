@@ -11,11 +11,15 @@ public class RedirectModel(IUrlShortenerService service, ILogger<IndexModel> log
 
     public async Task<IActionResult> OnGetAsync(string alias)
     {
-        _logger.LogInformation("RedirectModel: Redirecting to url with alias: {alias}", alias);
+        _logger.LogDebug("RedirectModel: Redirecting to url with alias: {alias}", alias);
         var model = await _service.FindShortUrlModelByAlias(alias);
 
         if (model is not null)
+        {
+            _logger.LogInformation("RedirectModel: Redirecting to url: {url}", model.Url);
+            await _service.IncrementShortUrlAccessCount(model.Alias!);
             return Redirect(model.Url);
+        }
         else
         {
             _logger.LogWarning(
