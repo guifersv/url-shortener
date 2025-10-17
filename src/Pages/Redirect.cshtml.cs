@@ -1,7 +1,6 @@
-using UrlShortener.Services.Interfaces;
-
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using UrlShortener.Services.Interfaces;
 
 namespace UrlShortener.Pages;
 
@@ -19,7 +18,10 @@ public class RedirectModel(IUrlShortenerService service, ILogger<IndexModel> log
             return Redirect(model.Url);
         else
         {
-            _logger.LogWarning("RedirectModel: The model with alias: {alias} does not exist in the database", alias);
+            _logger.LogWarning(
+                "RedirectModel: The model with alias: {alias} does not exist in the database",
+                alias
+            );
             return NotFound();
         }
     }
