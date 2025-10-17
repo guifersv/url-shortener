@@ -3,3 +3,19 @@
 @{
   ViewData["Title"] = "Home page";
 }
+
+<div id="component-container" class="m-3 p-3 container-md float-start">
+  <form method="post" asp-page="Index">
+    <div class="mb-3">
+      <label class="form-label" asp-for="@Model.ShortUrl.Url"></label>
+      <input class="form-control" asp-for="@Model.ShortUrl.Url" />
+      <span class="text-danger" asp-validation-for="@Model.ShortUrl.Url"></span>
+    </div>
+    <div class="mb-3">
+      <label class="form-label" asp-for="@Model.ShortUrl.Alias"></label>
+      <input class="form-control" asp-for="@Model.ShortUrl.Alias" />
+      <span class="text-danger" asp-validation-for="@Model.ShortUrl.Alias"></span>
+    </div>
+    <button class="btn btn-primary" role="submit">Submit</button>
+  </form>
+</div>
