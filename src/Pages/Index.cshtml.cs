@@ -17,7 +17,7 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
 
     public async Task<IActionResult> OnPostAsync()
     {
-        _logger.LogDebug("IndexModel: Creating Model with binded form.");
+        _logger.LogDebug("IndexModel: Creating Model with provided form.");
         if (!ModelState.IsValid)
             return Page();
 
