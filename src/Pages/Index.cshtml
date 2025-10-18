@@ -4,18 +4,30 @@
   ViewData["Title"] = "Home page";
 }
 
-<div id="component-container" class="m-3 p-3 container-md float-start">
-  <form method="post" asp-page="Index">
-    <div class="mb-3">
-      <label class="form-label" asp-for="@Model.ShortUrl.Url"></label>
-      <input class="form-control" asp-for="@Model.ShortUrl.Url" />
-      <span class="text-danger" asp-validation-for="@Model.ShortUrl.Url"></span>
-    </div>
-    <div class="mb-3">
-      <label class="form-label" asp-for="@Model.ShortUrl.Alias"></label>
-      <input class="form-control" asp-for="@Model.ShortUrl.Alias" />
-      <span class="text-danger" asp-validation-for="@Model.ShortUrl.Alias"></span>
-    </div>
-    <button class="btn btn-primary" role="submit">Submit</button>
-  </form>
+<div class="d-flex flex-lg-row flex-column justify-content-evenly">
+  <div id="component-container" class="p-3 mb-4">
+    <form method="post" asp-page="Index">
+      <div class="mb-3">
+        <label class="form-label" asp-for="@Model.ShortUrl.Url"></label>
+        <input class="form-control" asp-for="@Model.ShortUrl.Url" />
+        <span class="text-danger" asp-validation-for="@Model.ShortUrl.Url"></span>
+      </div>
+      <div class="mb-3">
+        <label class="form-label" asp-for="@Model.ShortUrl.Alias"></label>
+        <input class="form-control" asp-for="@Model.ShortUrl.Alias" />
+        <span class="text-danger" asp-validation-for="@Model.ShortUrl.Alias"></span>
+      </div>
+      <button class="btn btn-primary" role="submit">Submit</button>
+    </form>
+  </div>
+
+  <div id="models-container" class="p-3 overflow-auto">
+    @foreach (var shortModel in Model.ShortUrlDtos)
+    {
+      <div class="mb-3 row">
+        @shortModel
+      </div>
+    }
+  </div>
 </div>
+

@@ -6,9 +6,6 @@ html {
   html {
     font-size: 16px;
   }
-  #component-container {
-    max-width: 416px;
-  }
 }
 
 html {
@@ -20,3 +17,7 @@ body {
   margin-bottom: 60px;
 }
 
+#models-container {
+  max-width: 500px;
+  max-height: 500px;
+}
