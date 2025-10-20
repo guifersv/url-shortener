@@ -1,7 +1,19 @@
 @model IEnumerable<UrlShortener.Domain.ShortUrlDto>;
-@foreach (var shortModel in Model)
+@foreach (var shortModel in Model.Reverse())
 {
-    <div class="mb-3 row">
-        @shortModel
+  <div class="mb-3 row alert alert-light">
+    <div class="input-group">
+      <span class="input-group-text">Alias</span>
+      <input class="form-control" value="@shortModel.Alias" disabled></input>
     </div>
+    <div class="input-group">
+      <span class="input-group-text">Url</span>
+      <a class="form-control" href="@shortModel.Url">@shortModel.Url</a>
+    </div>
+    <div class="input-group">
+      <span class="input-group-text">Accesses</span>
+      <input class="form-control" value="@shortModel.Accesses" disabled></input>
+    </div>
+    <button class="btn btn-danger" type="button">Delete</button>
+  </div>
 }
