@@ -1,0 +1,7 @@
+@model IEnumerable<UrlShortener.Domain.ShortUrlDto>;
+@foreach (var shortModel in Model)
+{
+    <div class="mb-3 row">
+        @shortModel
+    </div>
+}

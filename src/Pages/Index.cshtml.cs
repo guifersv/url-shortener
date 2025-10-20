@@ -13,13 +13,7 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
     [BindProperty]
     public required ShortUrlDto ShortUrl { get; set; }
 
-    public IEnumerable<ShortUrlDto> ShortUrlDtos { get; set; } = [];
-
-    public async Task<ActionResult> OnGetAsync()
-    {
-        ShortUrlDtos = await _service.GetAllShortUrls();
-        return Page();
-    }
+    public void OnGet() { }
 
     public async Task<IActionResult> OnPostAsync()
     {

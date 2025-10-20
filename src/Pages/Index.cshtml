@@ -22,12 +22,9 @@
   </div>
 
   <div id="models-container" class="p-3 overflow-auto">
-    @foreach (var shortModel in Model.ShortUrlDtos)
-    {
-      <div class="mb-3 row">
-        @shortModel
-      </div>
-    }
+    @await Component.InvokeAsync("CreatedModels")
   </div>
-</div>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial">
+}
