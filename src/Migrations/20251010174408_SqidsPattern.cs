@@ -10,39 +10,33 @@ namespace UrlShortener.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_ShortUrls",
-                table: "ShortUrls");
+            migrationBuilder.DropPrimaryKey(name: "PK_ShortUrls", table: "ShortUrls");
 
-            migrationBuilder.AddColumn<int>(
-                name: "Id",
-                table: "ShortUrls",
-                type: "int",
-                nullable: false,
-                defaultValue: 0)
+            migrationBuilder
+                .AddColumn<int>(
+                    name: "Id",
+                    table: "ShortUrls",
+                    type: "int",
+                    nullable: false,
+                    defaultValue: 0
+                )
                 .Annotation("SqlServer:Identity", "1, 1");
 
-            migrationBuilder.AddPrimaryKey(
-                name: "PK_ShortUrls",
-                table: "ShortUrls",
-                column: "Id");
+            migrationBuilder.AddPrimaryKey(name: "PK_ShortUrls", table: "ShortUrls", column: "Id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropPrimaryKey(
-                name: "PK_ShortUrls",
-                table: "ShortUrls");
+            migrationBuilder.DropPrimaryKey(name: "PK_ShortUrls", table: "ShortUrls");
 
-            migrationBuilder.DropColumn(
-                name: "Id",
-                table: "ShortUrls");
+            migrationBuilder.DropColumn(name: "Id", table: "ShortUrls");
 
             migrationBuilder.AddPrimaryKey(
                 name: "PK_ShortUrls",
                 table: "ShortUrls",
-                column: "Alias");
+                column: "Alias"
+            );
         }
     }
 }

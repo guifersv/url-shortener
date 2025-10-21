@@ -11,8 +11,11 @@ public class ServicesTests
 
         var repositoryMock = new Mock<IUrlShortenerRepository>();
         repositoryMock
-            .Setup(r => r.FindShortUrlModelByAlias(It.Is<string>(
-                            alias => alias == shortUrlModel.Alias)).Result)
+            .Setup(r =>
+                r.FindShortUrlModelByAlias(
+                    It.Is<string>(alias => alias == shortUrlModel.Alias)
+                ).Result
+            )
             .Returns(shortUrlModel)
             .Verifiable(Times.Once());
 
@@ -53,13 +56,21 @@ public class ServicesTests
 
         var repositoryMock = new Mock<IUrlShortenerRepository>();
         repositoryMock
-            .Setup(r => r.FindShortUrlModelByAlias(It.Is<string>(
-                            alias => alias == shortUrlModel.Alias)).Result)
+            .Setup(r =>
+                r.FindShortUrlModelByAlias(
+                    It.Is<string>(alias => alias == shortUrlModel.Alias)
+                ).Result
+            )
             .Returns(shortUrlModel)
             .Verifiable(Times.Once());
         repositoryMock
-            .Setup(r => r.DeleteShortUrlModel(It.Is<ShortUrlModel>(
-                            m => m.Url == shortUrlModel.Url && m.Alias == shortUrlModel.Alias)))
+            .Setup(r =>
+                r.DeleteShortUrlModel(
+                    It.Is<ShortUrlModel>(m =>
+                        m.Url == shortUrlModel.Url && m.Alias == shortUrlModel.Alias
+                    )
+                )
+            )
             .Returns(Task.CompletedTask)
             .Verifiable(Times.Once());
 
@@ -72,7 +83,6 @@ public class ServicesTests
     [Fact]
     public async Task DeleteShortUrlModel_ShouldNotCallRepositoryDelete_WhenModelDoesNotExist()
     {
-
         var logger = Mock.Of<ILogger<UrlShortenerService>>();
 
         var repositoryMock = new Mock<IUrlShortenerRepository>();
@@ -94,20 +104,41 @@ public class ServicesTests
     [Fact]
     public async Task IncrementShortUrlAccessCount_ShouldCallRepositoryIncrement_WhenModelExists()
     {
-        ShortUrlModel shortUrlModel = new() { Alias = "alias", Url = "string" };
+        ShortUrlModel shortUrlModel = new()
+        {
+            Alias = "alias",
+            Url = "string",
+            Accesses = 0,
+        };
+        ShortUrlModel updatedShortUrlModel = new()
+        {
+            Alias = "alias",
+            Url = "string",
+            Accesses = 1,
+        };
 
         var logger = Mock.Of<ILogger<UrlShortenerService>>();
 
         var repositoryMock = new Mock<IUrlShortenerRepository>();
         repositoryMock
-            .Setup(r => r.FindShortUrlModelByAlias(It.Is<string>(
-                            alias => alias == shortUrlModel.Alias)).Result)
+            .Setup(r =>
+                r.FindShortUrlModelByAlias(
+                    It.Is<string>(alias => alias == shortUrlModel.Alias)
+                ).Result
+            )
             .Returns(shortUrlModel)
             .Verifiable(Times.Once());
         repositoryMock
-            .Setup(r => r.IncrementShortUrlAccessCount(It.Is<ShortUrlModel>(
-                            m => m.Url == shortUrlModel.Url && m.Alias == shortUrlModel.Alias)))
-            .Returns(Task.CompletedTask)
+            .Setup(r =>
+                r.IncrementShortUrlAccessCount(
+                    It.Is<ShortUrlModel>(m =>
+                        m.Url == shortUrlModel.Url
+                        && m.Alias == shortUrlModel.Alias
+                        && m.Accesses == shortUrlModel.Accesses
+                    )
+                ).Result
+            )
+            .Returns(updatedShortUrlModel)
             .Verifiable(Times.Once());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
@@ -119,6 +150,13 @@ public class ServicesTests
     [Fact]
     public async Task IncrementShortUrlAccessCount_ShouldNotCallRepositoryIncrement_WhenModelDoesNotExist()
     {
+        ShortUrlModel updatedShortUrlModel = new()
+        {
+            Alias = "alias",
+            Url = "string",
+            Accesses = 1,
+        };
+
         var logger = Mock.Of<ILogger<UrlShortenerService>>();
 
         var repositoryMock = new Mock<IUrlShortenerRepository>();
@@ -127,8 +165,8 @@ public class ServicesTests
             .Returns((ShortUrlModel?)null)
             .Verifiable(Times.Once());
         repositoryMock
-            .Setup(r => r.IncrementShortUrlAccessCount(It.IsAny<ShortUrlModel>()))
-            .Returns(Task.CompletedTask)
+            .Setup(r => r.IncrementShortUrlAccessCount(It.IsAny<ShortUrlModel>()).Result)
+            .Returns(updatedShortUrlModel)
             .Verifiable(Times.Never());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
@@ -183,7 +221,7 @@ public class ServicesTests
     }
 
     [Fact]
-    public async Task CreateShortUrlModel_ShouldReturnCreatedModelDto()
+    public async Task CreateShortUrlModel_ShouldReturnCreatedModelDtoWithAlias_WhenAliasIsProvided()
     {
         ShortUrlModel shortUrlModel = new() { Alias = "alias", Url = "string" };
 
@@ -191,17 +229,60 @@ public class ServicesTests
 
         var repositoryMock = new Mock<IUrlShortenerRepository>();
         repositoryMock
-            .Setup(r => r.CreateShortUrlModel(It.IsAny<ShortUrlModel>()).Result)
+            .Setup(r => r.FindShortUrlModelByAlias(It.IsAny<string>()).Result)
+            .Returns((ShortUrlModel?)null)
+            .Verifiable(Times.Never());
+        repositoryMock
+            .Setup(r =>
+                r.CreateShortUrlModel(
+                    It.Is<ShortUrlModel>(m =>
+                        m.Alias == shortUrlModel.Alias && m.Url == shortUrlModel.Url
+                    )
+                ).Result
+            )
             .Returns(shortUrlModel)
             .Verifiable(Times.Once());
 
         UrlShortenerService service = new(repositoryMock.Object, logger);
         var returnedObject = await service.CreateShortUrlModel(
-                Utils.ShortUrlModelToDto(shortUrlModel));
+            Utils.ShortUrlModelToDto(shortUrlModel)
+        );
 
         Assert.IsType<ShortUrlDto>(returnedObject);
         Assert.Equal(shortUrlModel.Alias, returnedObject.Alias);
         Assert.Equal(shortUrlModel.Url, returnedObject.Url);
+        repositoryMock.Verify();
+    }
+
+    [Fact]
+    public async Task CreateShortUrlModel_ShouldReturnCreatedModelDtoWithRandomAlias_WhenAliasIsNotProvidedAndModelDoesNotExist()
+    {
+        ShortUrlModel shortUrlModel = new() { Url = "string" };
+
+        var logger = Mock.Of<ILogger<UrlShortenerService>>();
+
+        var repositoryMock = new Mock<IUrlShortenerRepository>();
+        repositoryMock
+            .Setup(r => r.FindShortUrlModelByAlias(It.IsAny<string>()).Result)
+            .Returns((ShortUrlModel?)null)
+            .Verifiable(Times.Once());
+        repositoryMock
+            .Setup(r =>
+                r.CreateShortUrlModel(It.Is<ShortUrlModel>(m => m.Url == shortUrlModel.Url)).Result
+            )
+            .Callback<ShortUrlModel>(m => shortUrlModel.Alias = m.Alias)
+            .Returns(shortUrlModel)
+            .Verifiable(Times.Once());
+
+        UrlShortenerService service = new(repositoryMock.Object, logger);
+        var returnedObject = await service.CreateShortUrlModel(
+            Utils.ShortUrlModelToDto(shortUrlModel)
+        );
+
+        Assert.IsType<ShortUrlDto>(returnedObject);
+        Assert.Equal(shortUrlModel.Url, returnedObject.Url);
+        Assert.NotNull(returnedObject.Alias);
+        Assert.NotEmpty(returnedObject.Alias);
         repositoryMock.Verify();
     }
 }

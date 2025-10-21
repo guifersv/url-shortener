@@ -1,30 +1,38 @@
-using UrlShortener.Infrastructure;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using UrlShortener.Infrastructure;
+using UrlShortener.Services;
+using UrlShortener.Services.Interfaces;
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.Console()
-    .CreateBootstrapLogger();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 
 try
 {
     var builder = WebApplication.CreateBuilder(args);
 
-    builder.Services.AddSerilog((services, ls) => ls
-            .ReadFrom.Services(services)
-            .ReadFrom.Configuration(builder.Configuration)
-            .Enrich.FromLogContext()
-            .WriteTo.Console());
+    builder.Services.AddSerilog(
+        (services, ls) =>
+            ls
+                .ReadFrom.Services(services)
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+    );
 
-    SqlConnectionStringBuilder sqlConnectionStringBuilder =
-        new(builder.Configuration.GetConnectionString("UrlShortenerContext"))
-        {
-            Password = builder.Configuration["UrlShortenerContext:Password"]
-        };
+    SqlConnectionStringBuilder sqlConnectionStringBuilder = new(
+        builder.Configuration.GetConnectionString("UrlShortenerContext")
+    )
+    {
+        Password = builder.Configuration["UrlShortenerContext:Password"],
+    };
 
     builder.Services.AddDbContext<UrlShortenerContext>(opts =>
-            opts.UseSqlServer(sqlConnectionStringBuilder.ConnectionString));
+        opts.UseSqlServer(sqlConnectionStringBuilder.ConnectionString)
+    );
+
+    builder.Services.AddScoped<IUrlShortenerRepository, UrlShortenerRepository>();
+    builder.Services.AddScoped<IUrlShortenerService, UrlShortenerService>();
 
     builder.Services.AddRazorPages();
 
@@ -43,11 +51,9 @@ try
     app.UseAuthorization();
 
     app.MapStaticAssets();
-    app.MapRazorPages()
-       .WithStaticAssets();
+    app.MapRazorPages().WithStaticAssets();
 
     app.Run();
-
 }
 catch (Exception ex)
 {

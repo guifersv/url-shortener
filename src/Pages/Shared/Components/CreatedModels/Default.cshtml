@@ -1,0 +1,23 @@
+@model IEnumerable<UrlShortener.Domain.ShortUrlDto>;
+
+@{
+  var requestContext = Context.Request;
+}
+
+@foreach (var shortModel in Model.Reverse())
+{
+  var alias = shortModel.Alias;
+  var path = $"{requestContext.Host}/{alias}";
+
+  <div class="mb-3 row alert alert-light">
+    <div class="text-dark fw-bold mb-0">@path</div>
+    <div class="text-success mb-2" style="font-size: .8em;">@shortModel.Url</div>
+    <div class="d-flex">
+      <a class="btn btn-primary me-2" asp-page="Redirect" asp-route-alias="@shortModel.Alias">Visit Url</a>
+      <form method="post" asp-page-handler="Delete">
+        <input type="hidden" name="Alias" value="@shortModel.Alias">
+        <button type="submit" class="btn btn-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+}

@@ -1,10 +1,13 @@
-using UrlShortener.Services.Interfaces;
 using UrlShortener.Domain;
+using UrlShortener.Services.Interfaces;
 using UrlShortener.Utilities;
 
 namespace UrlShortener.Services;
 
-public class UrlShortenerService(IUrlShortenerRepository repository, ILogger<UrlShortenerService> logger) : IUrlShortenerService
+public class UrlShortenerService(
+    IUrlShortenerRepository repository,
+    ILogger<UrlShortenerService> logger
+) : IUrlShortenerService
 {
     private readonly IUrlShortenerRepository _repository = repository;
     private readonly ILogger<UrlShortenerService> _logger = logger;
@@ -36,7 +39,10 @@ public class UrlShortenerService(IUrlShortenerRepository repository, ILogger<Url
 
     public async Task IncrementShortUrlAccessCount(string alias)
     {
-        _logger.LogDebug("UrlShortenerService: Updating ShortUrlModel Access count with alias: {alias}.", alias);
+        _logger.LogDebug(
+            "UrlShortenerService: Updating ShortUrlModel Access count with alias: {alias}.",
+            alias
+        );
         var shortUrlModel = await _repository.FindShortUrlModelByAlias(alias);
 
         if (shortUrlModel is not null)
@@ -47,25 +53,34 @@ public class UrlShortenerService(IUrlShortenerRepository repository, ILogger<Url
 
     public async Task<IEnumerable<ShortUrlDto>> GetAllShortUrls()
     {
-        _logger.LogDebug("UrlShortenerService: Retrieving ShortUrl models from the database");
-        return (await _repository.GetAllShortUrls()).Select(m => new ShortUrlDto()
-        {
-            Url = m.Url,
-            Alias = m.Alias,
-            Accesses = m.Accesses,
-            DateCreated = m.DateCreated
-        }).ToList();
+        _logger.LogDebug("UrlShortenerService: Retrieving ShortUrl models from the database.");
+        return (await _repository.GetAllShortUrls())
+            .Select(m => new ShortUrlDto()
+            {
+                Url = m.Url,
+                Alias = m.Alias,
+                Accesses = m.Accesses,
+            })
+            .ToList();
     }
 
     public async Task<ShortUrlDto> CreateShortUrlModel(ShortUrlDto shortUrlDto)
     {
-        ShortUrlModel shortUrlModel = new()
+        _logger.LogDebug("UrlShortenerService: Creating ShortUrl.");
+        if (string.IsNullOrEmpty(shortUrlDto.Alias))
         {
-            Url = shortUrlDto.Url,
-            Alias = shortUrlDto.Alias,
-            Accesses = shortUrlDto.Accesses,
-            DateCreated = shortUrlDto.DateCreated,
-        };
+            while (true)
+            {
+                var alias = Utils.CreateAlias();
+                if (await _repository.FindShortUrlModelByAlias(alias) is null)
+                {
+                    _logger.LogDebug("UrlShortenerService: Generating random ShortUrl alias.");
+                    shortUrlDto.Alias = alias;
+                    break;
+                }
+            }
+        }
+        ShortUrlModel shortUrlModel = new() { Url = shortUrlDto.Url, Alias = shortUrlDto.Alias };
         var createdModel = await _repository.CreateShortUrlModel(shortUrlModel);
         return Utils.ShortUrlModelToDto(createdModel);
     }

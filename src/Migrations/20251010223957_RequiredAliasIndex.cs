@@ -18,21 +18,21 @@ namespace UrlShortener.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
 
             migrationBuilder.CreateIndex(
                 name: "IX_ShortUrls_Alias",
                 table: "ShortUrls",
                 column: "Alias",
-                unique: true);
+                unique: true
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_ShortUrls_Alias",
-                table: "ShortUrls");
+            migrationBuilder.DropIndex(name: "IX_ShortUrls_Alias", table: "ShortUrls");
 
             migrationBuilder.AlterColumn<string>(
                 name: "Alias",
@@ -40,7 +40,8 @@ namespace UrlShortener.Migrations
                 type: "nvarchar(max)",
                 nullable: true,
                 oldClrType: typeof(string),
-                oldType: "nvarchar(450)");
+                oldType: "nvarchar(450)"
+            );
         }
     }
 }
