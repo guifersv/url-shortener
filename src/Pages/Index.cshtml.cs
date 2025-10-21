@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using UrlShortener.Domain;
 using UrlShortener.Services.Interfaces;
 
@@ -36,4 +37,6 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
             return Page();
         }
     }
+
 }
+

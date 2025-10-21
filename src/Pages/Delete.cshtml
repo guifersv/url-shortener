@@ -1,0 +1,11 @@
+﻿@page "{alias}"
+@model DeleteModel
+@{
+}
+
+<h1>Are you sure?</h1>
+
+<form method="post">
+    <input type="hidden" asp-for="@Model.ShortUrl.Alias">
+    <button type="submit" class="btn btn-danger">Delete</button>
+</form>
