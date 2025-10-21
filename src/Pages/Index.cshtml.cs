@@ -1,3 +1,5 @@
+using System.Runtime.ExceptionServices;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -36,6 +38,14 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
             ModelState.AddModelError("ShortUrl.Alias", "Alias is not available.");
             return Page();
         }
+    }
+
+    public async Task<ActionResult> OnPostDeleteAsync(string alias)
+    {
+        _logger.LogInformation("IndexModel: Deleting Model: {alias}.", alias);
+
+        await _service.DeleteShortUrlModel(alias);
+        return RedirectToPage("Index");
     }
 
 }
