@@ -17,7 +17,8 @@ namespace UrlShortener.Migrations
                 nullable: true,
                 oldClrType: typeof(string),
                 oldType: "nvarchar(30)",
-                oldMaxLength: 30);
+                oldMaxLength: 30
+            );
         }
 
         /// <inheritdoc />
@@ -32,7 +33,8 @@ namespace UrlShortener.Migrations
                 defaultValue: "",
                 oldClrType: typeof(string),
                 oldType: "nvarchar(max)",
-                oldNullable: true);
+                oldNullable: true
+            );
         }
     }
 }
