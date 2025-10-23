@@ -1,6 +1,8 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+
 using Serilog;
+
 using UrlShortener.Infrastructure;
 using UrlShortener.Services;
 using UrlShortener.Services.Interfaces;
