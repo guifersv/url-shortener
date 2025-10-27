@@ -74,4 +74,24 @@ public class PageModelsTests
         Assert.IsType<PageResult>(result);
         serviceMock.Verify();
     }
+
+    [Fact]
+    public async Task IndexOnPostDeleteAsync_ShouldReturnRedirectToPage()
+    {
+        ShortUrlDto shortUrl = new() { Alias = "alias", Url = "https://example.com" };
+
+        var logger = Mock.Of<ILogger<IndexModel>>();
+
+        var serviceMock = new Mock<IUrlShortenerService>();
+        serviceMock
+            .Setup(s => s.DeleteShortUrlModel(It.IsAny<string>()))
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
+
+        IndexModel indexModel = new(serviceMock.Object, logger) { ShortUrl = shortUrl };
+        var result = await indexModel.OnPostDeleteAsync("alias");
+
+        Assert.IsType<RedirectToPageResult>(result);
+        serviceMock.Verify();
+    }
 }
