@@ -84,14 +84,69 @@ public class PageModelsTests
 
         var serviceMock = new Mock<IUrlShortenerService>();
         serviceMock
-            .Setup(s => s.DeleteShortUrlModel(It.IsAny<string>()))
+            .Setup(s => s.DeleteShortUrlModel(It.Is<string>(a => a == shortUrl.Alias)))
             .Returns(Task.CompletedTask)
             .Verifiable(Times.Once());
 
         IndexModel indexModel = new(serviceMock.Object, logger) { ShortUrl = shortUrl };
-        var result = await indexModel.OnPostDeleteAsync("alias");
+        var result = await indexModel.OnPostDeleteAsync(shortUrl.Alias);
 
         Assert.IsType<RedirectToPageResult>(result);
+        serviceMock.Verify();
+    }
+
+    [Fact]
+    public async Task RedirectOnGetAsync_ShouldReturnRedirect_WhenModelIsNotNull()
+    {
+        ShortUrlDto shortUrl = new() { Alias = "alias", Url = "https://example.com" };
+
+        var logger = Mock.Of<ILogger<IndexModel>>();
+
+        var serviceMock = new Mock<IUrlShortenerService>();
+        serviceMock
+            .Setup(s => s.FindShortUrlModelByAlias(
+                       It.Is<string>(a => a == shortUrl.Alias)).Result)
+            .Returns(shortUrl)
+            .Verifiable(Times.Once());
+        serviceMock
+            .Setup(s => s.IncrementShortUrlAccessCount(
+                       It.Is<string>(a => a == shortUrl.Alias)))
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Once());
+
+
+        RedirectModel redirectModel = new(serviceMock.Object, logger) { };
+        var returnedModel = await redirectModel.OnGetAsync(shortUrl.Alias);
+
+        var result = Assert.IsType<RedirectResult>(returnedModel);
+        Assert.Equal(shortUrl.Url, result.Url);
+        serviceMock.Verify();
+    }
+
+    [Fact]
+    public async Task RedirectOnGetAsync_ShouldReturnNotFound_WhenModelNull()
+    {
+        ShortUrlDto shortUrl = new() { Alias = "alias", Url = "https://example.com" };
+
+        var logger = Mock.Of<ILogger<IndexModel>>();
+
+        var serviceMock = new Mock<IUrlShortenerService>();
+        serviceMock
+            .Setup(s => s.FindShortUrlModelByAlias(
+                       It.Is<string>(a => a == shortUrl.Alias)).Result)
+            .Returns((ShortUrlDto?)null)
+            .Verifiable(Times.Once());
+        serviceMock
+            .Setup(s => s.IncrementShortUrlAccessCount(
+                       It.Is<string>(a => a == shortUrl.Alias)))
+            .Returns(Task.CompletedTask)
+            .Verifiable(Times.Never());
+
+
+        RedirectModel redirectModel = new(serviceMock.Object, logger) { };
+        var returnedModel = await redirectModel.OnGetAsync(shortUrl.Alias);
+
+        Assert.IsType<NotFoundResult>(returnedModel);
         serviceMock.Verify();
     }
 }
