@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+
 using UrlShortener.Services.Interfaces;
 
 namespace UrlShortener.Pages;
@@ -18,7 +19,7 @@ public class RedirectModel(IUrlShortenerService service, ILogger<IndexModel> log
         {
             _logger.LogInformation("RedirectModel: Redirecting to url: {url}", model.Url);
             await _service.IncrementShortUrlAccessCount(model.Alias!);
-            return Redirect(model.Url);
+            return RedirectPermanent(model.Url);
         }
         else
         {

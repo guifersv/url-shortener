@@ -120,6 +120,7 @@ public class PageModelsTests
 
         var result = Assert.IsType<RedirectResult>(returnedModel);
         Assert.Equal(shortUrl.Url, result.Url);
+        Assert.True(result.Permanent);
         serviceMock.Verify();
     }
 
