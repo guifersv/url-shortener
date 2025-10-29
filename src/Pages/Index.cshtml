@@ -4,7 +4,7 @@
   ViewData["Title"] = "Home page";
 }
 
-<div class="d-flex flex-lg-row flex-column justify-content-evenly">
+<div class="d-flex flex-lg-row flex-column">
   <div id="component-container" class="p-3 mb-4">
     <form method="post" asp-page="Index">
       <div class="mb-3">
@@ -24,6 +24,7 @@
   <div id="models-container" class="p-3 overflow-auto">
     @await Component.InvokeAsync("CreatedModels")
   </div>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial">
