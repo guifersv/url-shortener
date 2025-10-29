@@ -1,22 +1,22 @@
 using System.ComponentModel.DataAnnotations;
+
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.EntityFrameworkCore;
 
 namespace UrlShortener.Domain;
 
-[Index(nameof(Alias), IsUnique = true)]
 public class ShortUrlModel
 {
-    public int Id { get; set; }
-    public required string Url { get; set; }
+    [Key]
+    [StringLength(8)]
+    public required string Alias { get; set; }
 
-    [Required]
-    public string? Alias { get; set; }
+    public required string Url { get; set; }
     public int Accesses { get; set; }
 }
 
 public record ShortUrlDto
 {
+
     [Url(ErrorMessage = "Invalid URL.")]
     public required string Url { get; set; }
 

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+
 using UrlShortener.Domain;
 using UrlShortener.Services.Interfaces;
 
@@ -23,7 +24,7 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
 
     public async Task<ShortUrlModel?> FindShortUrlModelByAlias(string alias)
     {
-        return await _context.ShortUrls.FirstOrDefaultAsync(m => m.Alias == alias);
+        return await _context.ShortUrls.FindAsync(alias);
     }
 
     public async Task<ShortUrlModel> IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)

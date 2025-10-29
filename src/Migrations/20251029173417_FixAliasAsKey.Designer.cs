@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using UrlShortener.Infrastructure;
 
@@ -10,9 +11,11 @@ using UrlShortener.Infrastructure;
 namespace UrlShortener.Migrations
 {
     [DbContext(typeof(UrlShortenerContext))]
-    partial class UrlShortenerContextModelSnapshot : ModelSnapshot
+    [Migration("20251029173417_FixAliasAsKey")]
+    partial class FixAliasAsKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
