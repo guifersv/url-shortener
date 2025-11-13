@@ -1,4 +1,5 @@
-using UrlShortener.Domain;
+using UrlShortener.Application.Dtos;
+using UrlShortener.Domain.Entities;
 
 namespace UrlShortener.Utilities;
 

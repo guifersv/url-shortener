@@ -1,11 +1,10 @@
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
-
 using Serilog;
-
+using UrlShortener.Application.Services;
+using UrlShortener.Application.Services.Interfaces;
+using UrlShortener.Domain.Interfaces;
 using UrlShortener.Infrastructure;
-using UrlShortener.Services;
-using UrlShortener.Services.Interfaces;
 
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 

@@ -1,6 +1,6 @@
-using UrlShortener.Domain;
+using UrlShortener.Application.Dtos;
 
-namespace UrlShortener.Services.Interfaces;
+namespace UrlShortener.Application.Services.Interfaces;
 
 public interface IUrlShortenerService
 {

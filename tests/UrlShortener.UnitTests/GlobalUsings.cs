@@ -1,10 +1,9 @@
 global using Microsoft.Extensions.Logging;
-
 global using Moq;
-
-global using UrlShortener.Domain;
+global using UrlShortener.Application.Dtos;
+global using UrlShortener.Application.Services;
+global using UrlShortener.Application.Services.Interfaces;
+global using UrlShortener.Domain.Entities;
+global using UrlShortener.Domain.Interfaces;
 global using UrlShortener.Pages;
-global using UrlShortener.Services;
-global using UrlShortener.Services.Interfaces;
 global using UrlShortener.Utilities;
-

@@ -1,8 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-
-using UrlShortener.Domain;
-using UrlShortener.Services.Interfaces;
+using UrlShortener.Application.Dtos;
+using UrlShortener.Application.Services.Interfaces;
 
 namespace UrlShortener.Pages;
 
@@ -32,9 +31,7 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
         }
         else
         {
-            _logger.LogWarning(
-                "IndexModel: Alias: {alias} is not available.",
-                ShortUrl.Alias);
+            _logger.LogWarning("IndexModel: Alias: {alias} is not available.", ShortUrl.Alias);
 
             ModelState.AddModelError("ShortUrl.Alias", "Alias is not available.");
             return Page();
@@ -48,6 +45,4 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
         await _service.DeleteShortUrlModel(alias);
         return RedirectToPage("Index");
     }
-
 }
-

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using UrlShortener.Domain;
+using UrlShortener.Domain.Entities;
 
 namespace UrlShortener.Infrastructure;
 

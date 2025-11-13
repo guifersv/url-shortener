@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using UrlShortener.Services.Interfaces;
+using UrlShortener.Application.Services.Interfaces;
 
 namespace UrlShortener.ViewComponents;
 

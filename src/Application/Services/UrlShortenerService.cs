@@ -1,8 +1,10 @@
-using UrlShortener.Domain;
-using UrlShortener.Services.Interfaces;
+using UrlShortener.Application.Dtos;
+using UrlShortener.Application.Services.Interfaces;
+using UrlShortener.Domain.Entities;
+using UrlShortener.Domain.Interfaces;
 using UrlShortener.Utilities;
 
-namespace UrlShortener.Services;
+namespace UrlShortener.Application.Services;
 
 public class UrlShortenerService(
     IUrlShortenerRepository repository,

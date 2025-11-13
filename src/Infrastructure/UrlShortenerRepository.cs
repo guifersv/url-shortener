@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-
-using UrlShortener.Domain;
-using UrlShortener.Services.Interfaces;
+using UrlShortener.Domain.Entities;
+using UrlShortener.Domain.Interfaces;
 
 namespace UrlShortener.Infrastructure;
 
