@@ -9,5 +9,6 @@ public class ShortUrlModel
     public required string Alias { get; set; }
 
     public required string Url { get; set; }
+
     public int Accesses { get; set; }
 }

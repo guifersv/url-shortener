@@ -1,13 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.Text.Json.Serialization;
 
 namespace UrlShortener.Application.Dtos;
 
 public record ShortUrlDto
 {
-    [Url(ErrorMessage = "Invalid URL.")]
-    public required string Url { get; set; }
-
     [StringLength(
         25,
         MinimumLength = 6,
@@ -15,6 +12,9 @@ public record ShortUrlDto
     )]
     public string? Alias { get; set; }
 
-    [BindNever]
+    [Url(ErrorMessage = "Invalid URL.")]
+    public required string Url { get; set; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenReading)]
     public int Accesses { get; set; }
 }

@@ -7,7 +7,7 @@ using UrlShortener.Infrastructure;
 
 #nullable disable
 
-namespace UrlShortener.Migrations
+namespace UrlShortener.src.Infrastructure.Migrations
 {
     [DbContext(typeof(UrlShortenerContext))]
     partial class UrlShortenerContextModelSnapshot : ModelSnapshot
@@ -16,16 +16,16 @@ namespace UrlShortener.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
+                .HasAnnotation("ProductVersion", "10.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("UrlShortener.Domain.ShortUrlModel", b =>
+            modelBuilder.Entity("UrlShortener.Domain.Entities.ShortUrlModel", b =>
                 {
                     b.Property<string>("Alias")
-                        .HasMaxLength(8)
-                        .HasColumnType("nvarchar(8)");
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<int>("Accesses")
                         .HasColumnType("int");
