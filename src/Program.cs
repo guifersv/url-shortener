@@ -22,10 +22,10 @@ try
     );
 
     SqlConnectionStringBuilder sqlConnectionStringBuilder = new(
-        builder.Configuration.GetConnectionString("UrlShortenerContext")
+        builder.Configuration.GetConnectionString("DefaultConnection")
     )
     {
-        Password = builder.Configuration["UrlShortenerContext:Password"],
+        Password = builder.Configuration["DefaultConnection:Password"],
     };
 
     builder.Services.AddDbContext<UrlShortenerContext>(opts =>
