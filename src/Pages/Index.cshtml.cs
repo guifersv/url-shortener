@@ -23,26 +23,25 @@ public class IndexModel(IUrlShortenerService service, ILogger<IndexModel> logger
 
         if (
             string.IsNullOrWhiteSpace(ShortUrl.Alias)
-            || await _service.FindShortUrlModelByAlias(ShortUrl.Alias) is null
+            || await _service.GetShortUrlModelByAlias(ShortUrl.Alias) is null
         )
         {
             await _service.CreateShortUrlModel(ShortUrl);
             return RedirectToPage();
         }
-        else
-        {
-            _logger.LogWarning("IndexModel: Alias: {alias} is not available.", ShortUrl.Alias);
 
-            ModelState.AddModelError("ShortUrl.Alias", "Alias is not available.");
-            return Page();
-        }
+        _logger.LogWarning("IndexModel: alias is not available.");
+
+        ModelState.AddModelError("ShortUrl.Alias", "Alias is not available.");
+        return Page();
     }
 
-    public async Task<ActionResult> OnPostDeleteAsync(string alias)
+    public async Task<IActionResult> OnPostDeleteAsync(string alias)
     {
-        _logger.LogInformation("IndexModel: Deleting Model: {alias}.", alias);
+        _logger.LogInformation("IndexModel: Deleting Model.");
 
-        await _service.DeleteShortUrlModel(alias);
-        return RedirectToPage("Index");
+        var result = await _service.DeleteShortUrlModel(alias);
+
+        return result ? RedirectToPage("Index") : BadRequest();
     }
 }
