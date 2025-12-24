@@ -1,3 +1,4 @@
+using System.Text;
 using UrlShortener.Application.Dtos;
 using UrlShortener.Domain.Entities;
 
@@ -5,30 +6,29 @@ namespace UrlShortener.Utilities;
 
 public static class Utils
 {
-    public static ShortUrlDto ShortUrlModelToDto(ShortUrlModel shortUrlModel)
+    public static ShortUrlDto ShortUrlToDto(ShortUrlModel shortUrlModel)
     {
-        ShortUrlDto shortUrlDto = new()
+        return new()
         {
             Url = shortUrlModel.Url,
             Alias = shortUrlModel.Alias,
             Accesses = shortUrlModel.Accesses,
         };
-        return shortUrlDto;
     }
 
     public static string CreateAlias()
     {
         Random random = new();
-        var allowedChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const string allowedChars =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
         var aliasRange = random.Next(5, 8);
-        char[] chars = new char[aliasRange];
+        StringBuilder output = new();
 
-        for (int i = 0; i < aliasRange; i++)
+        for (int i = 0; i != aliasRange; i++)
         {
-            var currentChar = allowedChars[random.Next(0, allowedChars.Length - 1)];
-            chars[i] = currentChar;
+            output.Append(allowedChars[random.Next(0, allowedChars.Length - 1)]);
         }
-        return new string(chars);
+        return output.ToString();
     }
 }

@@ -15,23 +15,27 @@ public class UrlShortenerRepository(UrlShortenerContext context) : IUrlShortener
         return createdModel.Entity;
     }
 
+    public async Task<ShortUrlModel?> FindShortUrlModelByAlias(string alias)
+    {
+        return await _context.ShortUrls.FindAsync(alias);
+    }
+
+    public async Task<ShortUrlModel?> GetShortUrlModelByAlias(string alias)
+    {
+        return await _context.ShortUrls.AsNoTracking().FirstOrDefaultAsync(a => a.Alias == alias);
+    }
+
     public async Task DeleteShortUrlModel(ShortUrlModel shortUrlModel)
     {
         _context.Remove(shortUrlModel);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<ShortUrlModel?> FindShortUrlModelByAlias(string alias)
+    public async Task IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)
     {
-        return await _context.ShortUrls.FindAsync(alias);
-    }
-
-    public async Task<ShortUrlModel> IncrementShortUrlAccessCount(ShortUrlModel shortUrlModel)
-    {
-        shortUrlModel.Accesses += 1;
-        var model = _context.ShortUrls.Update(shortUrlModel);
+        shortUrlModel.Accesses++;
+        _context.ShortUrls.Update(shortUrlModel);
         await _context.SaveChangesAsync();
-        return model.Entity;
     }
 
     public async Task<IEnumerable<ShortUrlModel>> GetAllShortUrls()
